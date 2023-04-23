@@ -276,10 +276,10 @@ class Ui_SizeWeight(QMainWindow):
         self.clearBtn.setText(_translate("SizeWeight", "Clear"))
         self.backBtn.setText(_translate("SizeWeight", "Back"))
         self.label_2.setText(_translate("SizeWeight", "Size and Weight Classification"))
-        self.label_11.setText(_translate("SizeWeight", "Size:"))
-        self.label_12.setText(_translate("SizeWeight", "Estimated Weight:"))
-        self.sizeLbl.setText(_translate("SizeWeight", "0"))
-        self.weightLbl.setText(_translate("SizeWeight", "0 grams"))
+        #self.label_11.setText(_translate("SizeWeight", "Size:"))
+        #self.label_12.setText(_translate("SizeWeight", "Estimated Weight:"))
+        #self.sizeLbl.setText(_translate("SizeWeight", "0"))
+        #self.weightLbl.setText(_translate("SizeWeight", "0 grams"))
         SizeWeight.setWindowIcon(QIcon('eggsify-logo-small-01.png'))
 
 

@@ -30,7 +30,7 @@ class Ui_Quality(QMainWindow):
         self.qualitytVid.clear()
 
     # Quality video stream container
-    @pyqtSlot(QImage)
+    #@pyqtSlot(QImage)
     def eggImg_slot(self, Image):
         self.qualityVid.setPixmap(QPixmap.fromImage(Image))
         #self.qualityVid.setPixmap(QtGui.QPixmap(img))
@@ -200,8 +200,8 @@ class Ui_Quality(QMainWindow):
         self.clearBtn1.setText(_translate("Quality", "Clear"))
         self.backBtn1.setText(_translate("Quality", "Back"))
         self.label_2.setText(_translate("Quality", "Quality Classification"))
-        self.qualityLbl.setText(_translate("Quality", "Quality:"))
-        self.typeOfEgg.setText(_translate("Quality", "0"))
+        #self.qualityLbl.setText(_translate("Quality", "Quality:"))
+        #self.typeOfEgg.setText(_translate("Quality", "0"))
         Quality.setWindowIcon(QIcon('eggsify-logo-small-01.png'))
 
 class Work(QThread):
