@@ -11,7 +11,7 @@ from PyQt5.uic import loadUi
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, Qt, QThread
 import datetime
 
-class Ui_Quality(QMainWindow):
+class Ui_Quality(object):
 
     def showMain2(self, main_menu):
         main_menu.show()
@@ -19,14 +19,14 @@ class Ui_Quality(QMainWindow):
     # Configure webcam to capture the image
     def configCam2(self):
         #if event.type() == QtCore.QEvent.MouseButtonDblClick:
-        self.Work = Work()
-        self.Work.start()
-        self.Work.eggImg.connect(self.eggImg_slot)
+        self.Work2 = Work2()
+        self.Work2.start()
+        self.Work2.eggImg2.connect(self.eggImg_slot)
 
     # Clear image for another image acquisition
     def clearImg(self):
-        self.Work.stop()
-        self.Work.disconnect()
+        self.Work2.stop()
+        self.Work2.disconnect()
         self.qualitytVid.clear()
 
     # Quality video stream container
@@ -50,7 +50,7 @@ class Ui_Quality(QMainWindow):
                 date.year, date.month, date.day, date.hour, date.minute, date.second)), frame)
 
             self.image_counter += 1  # This variable shows how many frames are captured
-            self.Work.stop()
+            self.Work2.stop()
             cap.release()
         msgbox = QMessageBox()
         msgbox.setWindowTitle("Image Captured")
@@ -78,7 +78,7 @@ class Ui_Quality(QMainWindow):
         self.qualityVid.setLineWidth(0)
         self.qualityVid.setText("")
         self.qualityVid.setObjectName("qualityVid")
-        self.configBtn1 = QtWidgets.QPushButton(self.bgwidget)
+        self.configBtn1 = QtWidgets.QPushButton(self.bgwidget, clicked=lambda: self.configCam2())
         self.configBtn1.setGeometry(QtCore.QRect(500, 80, 171, 41))
         font = QtGui.QFont()
         font.setFamily("Source Sans Pro")
@@ -204,19 +204,20 @@ class Ui_Quality(QMainWindow):
         #self.typeOfEgg.setText(_translate("Quality", "0"))
         Quality.setWindowIcon(QIcon('eggsify-logo-small-01.png'))
 
-class Work(QThread):
+class Work2(QThread):
     eggImg2 = pyqtSignal(QImage)
 
-    def __init__(self):
-        super().__init__()
-        self.thread_running = True
+    #def __init__(self):
+     #   super().__init__()
+      #  self.thread_running = True
 
         # Create QLabel that holds the video stream
-        self.qualityVid = QLabel(self)
-        self.configBtn1.clicked.connect(self.configCam2)
+       # self.qualityVid = QLabel(self)
+        # self.configBtn1.clicked.connect(self.configCam2)
         #self.captureBtn1.clicked.connect(self.captureClicked2())
 
     def run(self):
+        self.thread_running2 = True
         cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
         while self.thread_running2:
             ret, frame = cap.read()
@@ -225,13 +226,13 @@ class Work(QThread):
                 flip = cv2.flip(img, 1)
                 converter = QImage(flip.data, flip.shape[1], flip.shape[0], QImage.Format_RGB888)
                 pic = converter.scaled(431, 311, Qt.KeepAspectRatio)
-                self.eggImg.emit(pic)
+                self.eggImg2.emit(pic)
 
         #cap.release()
         #cv2.destroyAllWindows()
         #return
 
     def stop(self):
-        self.thread_running = False
+        self.thread_running2 = False
         self.quit()
 
