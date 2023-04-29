@@ -10,6 +10,7 @@ from skimage.io import imsave, imread
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, Qt, QThread
 import datetime
+import numpy as np
 
 class Ui_Quality(object):
 
@@ -25,16 +26,13 @@ class Ui_Quality(object):
 
     # Clear image for another image acquisition
     def clearImg(self):
-        self.Work2.stop()
+        self.Work2.stop2()
         self.Work2.disconnect()
-        self.qualitytVid.clear()
+        self.qualityVid.clear()
 
     # Quality video stream container
-    #@pyqtSlot(QImage)
     def eggImg_slot(self, Image):
         self.qualityVid.setPixmap(QPixmap.fromImage(Image))
-        #self.qualityVid.setPixmap(QtGui.QPixmap(img))
-        #self.qualityVid.setPixmap(QtGui.QPixmap(self.eggImg_slot2)) # setPixmap
         self.qualityVid.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
         self.image_counter = 0
 
@@ -50,7 +48,7 @@ class Ui_Quality(object):
                 date.year, date.month, date.day, date.hour, date.minute, date.second)), frame)
 
             self.image_counter += 1  # This variable shows how many frames are captured
-            self.Work2.stop()
+            self.Work2.stop2()
             cap.release()
         msgbox = QMessageBox()
         msgbox.setWindowTitle("Image Captured")
@@ -228,11 +226,16 @@ class Work2(QThread):
                 pic = converter.scaled(431, 311, Qt.KeepAspectRatio)
                 self.eggImg2.emit(pic)
 
-        #cap.release()
-        #cv2.destroyAllWindows()
-        #return
+        cap.release()
+        cv2.destroyAllWindows()
+        return
 
-    def stop(self):
+    def stop2(self):
         self.thread_running2 = False
         self.quit()
+
+
+
+
+
 
