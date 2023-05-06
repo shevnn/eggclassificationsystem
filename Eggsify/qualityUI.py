@@ -10,16 +10,23 @@ from skimage.io import imsave, imread
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, Qt, QThread
 import datetime
+from keras.models import load_model
+import tensorflow as tf
 import numpy as np
 
 class Ui_Quality(object):
-
+    # Disable scientific notation for clarity
+    np.set_printoptions(suppress=True)
+        
     def showMain2(self, main_menu):
         main_menu.show()
 
     # Configure webcam to capture the image
     def configCam2(self):
         #if event.type() == QtCore.QEvent.MouseButtonDblClick:
+        # Make the image a numpy array and reshape it to the models input shape.
+        
+        
         self.Work2 = Work2()
         self.Work2.start()
         self.Work2.eggImg2.connect(self.eggImg_slot)
@@ -215,16 +222,38 @@ class Work2(QThread):
         #self.captureBtn1.clicked.connect(self.captureClicked2())
 
     def run(self):
+        # Load the model
+        model = load_model("D:\Documents\Modules SY. 2022-2023\CMSC 502 - Undergrad Thesis 2\Egg Classification System\eggclassificationsystem\Eggsify\keras_model.h5", compile=False)
+
+        # Load the labels
+        class_names = open("D:\Documents\Modules SY. 2022-2023\CMSC 502 - Undergrad Thesis 2\Egg Classification System\eggclassificationsystem\Eggsify\labels.txt", "r").readlines()
+        
         self.thread_running2 = True
         cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
         while self.thread_running2:
             ret, frame = cap.read()
             if ret:
                 img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                img = cv2.resize(img, (224, 224), interpolation=cv2.INTER_AREA)
+
                 flip = cv2.flip(img, 1)
                 converter = QImage(flip.data, flip.shape[1], flip.shape[0], QImage.Format_RGB888)
                 pic = converter.scaled(431, 311, Qt.KeepAspectRatio)
                 self.eggImg2.emit(pic)
+                img = np.asarray(img, dtype=np.float32).reshape(1, 224, 224, 3)
+
+        # Normalize the image array
+        #image = (image / 127.5) - 1
+        img = (img / 225)
+
+        # Predicts the model
+        prediction = model.predict(img)
+        index = np.argmax(prediction)
+        class_name = class_names[index]
+        confidence_score = prediction[0][index]
+
+        print("Class:", class_name[2:])
+        print("Confidence Score:", str(np.round(confidence_score * 100))[:-2], "%")
 
         cap.release()
         cv2.destroyAllWindows()
